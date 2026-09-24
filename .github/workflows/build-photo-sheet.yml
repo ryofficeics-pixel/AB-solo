@@ -1,0 +1,38 @@
+name: Build photo sheet PDF
+on:
+  push:
+    branches:
+      - pdf-photo-sheet-build
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: pip install pillow reportlab
+      - name: Build PDF
+        run: python build_photo_pdf.py
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: AB-solo-photo-sheet
+          path: AB_solo_photo_sheet.pdf
+      - name: Commit generated PDF to build branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f AB_solo_photo_sheet.pdf
+          if git diff --cached --quiet; then
+            echo "No PDF changes"
+          else
+            git commit -m "Generate A4 photo sheet PDF"
+            git push
+          fi
