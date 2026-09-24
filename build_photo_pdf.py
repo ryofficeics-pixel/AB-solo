@@ -96,13 +96,7 @@ for idx,(num,path,stem) in enumerate(items):
     c.setFont("Helvetica-Bold",11)
     c.drawString(x+pad,y+23,label)
 
-    clean=re.sub(r"(?i)^no\\s*\\d+[_\\-\\s]*","",stem).strip(" _-")
-    generic={"",str(num),f"no {num}",f"no_{num}",f"no-{num}"}
-    if clean.lower() in generic or re.fullmatch(r"(?i)(img|image|photo|foto)[ _-]*\\d*",clean or ""):
-        desc=f"Foto {group_count[num]}"
-    else:
-        desc=re.sub(r"\\s+"," ",clean.replace("_"," ").replace("-"," ")).strip()
-        if len(desc)>46: desc=desc[:43].rstrip()+"..."
+    desc=f"Foto {group_count[num]}"
     c.setFont("Helvetica",8.5)
     c.setFillColorRGB(.38,.38,.38)
     c.drawString(x+pad,y+9,desc)
